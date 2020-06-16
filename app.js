@@ -1,32 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const Book = require('./models/bookModel');
 
 const app = express();
-const bookRouter = express.Router();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+const bookRouter = require('./routes/bookRouter')(Book);
+
 const port = process.env.PORT || 3000;
 mongoose.connect('mongodb://localhost:27017/bookAPI', { useNewUrlParser: true, useUnifiedTopology: true });
-
-bookRouter.route('/books').get((req, res) => {
-  const query = {};
-  if (req.query.genre) {
-    query.genre = req.query.genre;
-  }
-  Book.find(query, (error, books) => {
-    if (error) {
-      return res.send(error);
-    }
-    return res.json(books);
-  });
-});
-bookRouter.route('/books/:bookId').get((req, res) => {
-  Book.findById(req.params.bookId, (error, book) => {
-    if (error) {
-      return res.send(error);
-    }
-    return res.json(book);
-  });
-});
 
 app.use('/api', bookRouter);
 
