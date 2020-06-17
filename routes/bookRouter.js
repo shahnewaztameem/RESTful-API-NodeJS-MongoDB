@@ -57,7 +57,6 @@ function routes(Book) {
         //  eslint-disable-next-line no-underscore-dangle
         delete req.body._id;
       }
-
       Object.entries(req.body).forEach((item) => {
         const key = item[0];
         const value = item[1];
@@ -68,6 +67,14 @@ function routes(Book) {
           return res.send(error);
         }
         return res.json(book);
+      });
+    })
+    .delete((req, res) => {
+      req.book.remove((error) => {
+        if (error) {
+          return res.send(error);
+        }
+        return res.sendStatus(204);
       });
     });
   return bookRouter;
