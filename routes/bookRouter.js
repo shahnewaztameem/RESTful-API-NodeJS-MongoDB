@@ -9,6 +9,7 @@ function routes(Book) {
   bookRouter.route('/books')
     .post(controller.post)
     .get(controller.get);
+
   bookRouter.use('/books/:bookId', (req, res, next) => {
     Book.findById(req.params.bookId, (error, book) => {
       if (error) {
